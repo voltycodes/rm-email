@@ -1,5 +1,12 @@
-const replacement = "[REDACTED]";
-const iterations = 6;
+let replacement = "[REDACTED]";
+
+chrome.storage.sync.get('replacementText', function(data) {
+  if (data.replacementText) {
+    replacement = data.replacementText;
+  }
+});
+
+const iterations = 5;
 const delay = 500; // 500ms
 
 // Regular expression to match email addresses
@@ -7,16 +14,13 @@ const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b/g;
 
 function replaceEmail(node) {
   if (node.nodeValue && emailRegex.test(node.nodeValue)) {
-    console.log(`Original text: ${node.nodeValue}`);
     node.nodeValue = node.nodeValue.replace(emailRegex, replacement);
-    console.log(`Replaced text: ${node.nodeValue}`);
   } else {
     node.childNodes.forEach(child => replaceEmail(child));
   }
 }
 
 function replaceEmailInDocument() {
-  console.log("Running replaceEmailInDocument");
   replaceEmail(document.body);
 }
 
@@ -29,7 +33,7 @@ function runReplacements(iterations, delay) {
 
 // Wait for the document to be fully loaded before running replacements
 window.addEventListener('load', () => {
-  console.log("Document loaded, starting replacements");
+  console.log("rm-email loaded, starting email replacements...");
   runReplacements(iterations, delay);
 });
 
@@ -37,7 +41,6 @@ window.addEventListener('load', () => {
 const observer = new MutationObserver(mutations => {
   mutations.forEach(mutation => {
     mutation.addedNodes.forEach(node => {
-      console.log("Mutation detected");
       replaceEmail(node);
     });
   });
@@ -48,6 +51,3 @@ observer.observe(document.body, {
   childList: true,
   subtree: true
 });
-
-console.log("Email Replacer content script loaded");
-
