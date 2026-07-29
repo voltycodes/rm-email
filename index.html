@@ -1,26 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>rm-email</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 24px;
-        min-width: 300px;
-        font-size: 14px;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #1e1e2e;
+        color: #cdd6f4;
+        min-width: 300px;
+        font-size: 13px;
+      }
+
+      .popup {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #cdd6f4;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        color: #6c7086;
+        margin-top: 2px;
+      }
+
+      /* Mode tabs */
+      .mode-tabs {
+        display: flex;
+        background: #181825;
+        border-radius: 8px;
+        padding: 3px;
+        gap: 2px;
+      }
+
+      .mode-tab {
+        flex: 1;
+        padding: 6px 0;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: #6c7086;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: capitalize;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .mode-tab:hover {
+        color: #a6adc8;
+      }
+
+      .mode-tab.active {
+        background: #313244;
+        color: #cdd6f4;
+      }
+
+      /* Form sections */
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: opacity 0.15s ease;
+      }
+
+      .form-section.hidden {
+        display: none;
+      }
+
+      .field-label {
+        font-size: 12px;
+        color: #6c7086;
+        text-transform: capitalize;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        background: #181825;
+        border: 1px solid #313244;
+        border-radius: 6px;
+        padding: 7px 10px;
+        color: #cdd6f4;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s ease;
+      }
+
+      input[type="text"]:focus {
+        border-color: #585b70;
+      }
+
+      /* Chip input */
+      .chip-input {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        background: #181825;
+        border: 1px solid #313244;
+        border-radius: 6px;
+        padding: 6px 8px;
+        min-height: 72px;
+        align-content: flex-start;
+        cursor: text;
+        transition: border-color 0.15s ease;
+      }
+
+      .chip-input:focus-within {
+        border-color: #585b70;
+      }
+
+      .chip-input.error {
+        border-color: #f38ba8;
+      }
+
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: #313244;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 12px;
+        color: #cdd6f4;
+        line-height: 1.4;
+      }
+
+      .chip-x {
+        cursor: pointer;
+        color: #6c7086;
+        font-size: 11px;
+        line-height: 1;
+      }
+
+      .chip-x:hover {
+        color: #f38ba8;
+      }
+
+      .chip-input input {
+        flex: 1;
+        min-width: 80px;
+        background: none;
+        border: none;
+        outline: none;
+        color: #cdd6f4;
+        font-size: 13px;
+        font-family: inherit;
+        padding: 0;
+      }
+
+
     </style>
   </head>
   <body>
-    <h1>rm-email</h1>
-    <p>This extension hides your email address on web pages.</p>
-    <label for="rplce">Text to replace emails with:</label>
-    <br>
-    <input id="rplce" type="text"></input>
-    <button id="setBtn">Set Replacement</button>
-    <br>
-    <hr>
-    <button id="toggleBtn">disable</button>
+    <div class="popup">
+      <div>
+        <div class="title">rm-email</div>
+        <div class="subtitle">Hide your email address on web pages</div>
+      </div>
+
+      <div class="mode-tabs">
+        <button class="mode-tab" data-mode="off">off</button>
+        <button class="mode-tab" data-mode="only">my emails</button>
+        <button class="mode-tab" data-mode="all">hide all</button>
+      </div>
+
+      <div class="form-section" id="replacementGroup">
+        <div class="field-label">Replacement text</div>
+        <input id="replacementInput" type="text" placeholder="[REDACTED]" />
+      </div>
+
+      <div class="form-section hidden" id="emailsGroup">
+        <div class="field-label">Emails to hide</div>
+        <div class="chip-input" id="chipInput">
+          <input id="chipField" type="text" placeholder="Type email, press space" />
+        </div>
+      </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>
